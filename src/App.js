@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   ResponsiveLine
 } from '@nivo/line'
+import { ResponsiveBar } from "@nivo/bar";
 
 const dataset = [
   {
@@ -430,7 +431,7 @@ const dataset = [
     "y1": 0
   }]
 
-const intial = dataset.slice()
+//const intial = dataset.slice()
 
 function App() {
 
@@ -442,8 +443,8 @@ function App() {
     }
   ]);
   const [running, setRunning] = useState(true);
-  const [animationParams, setAntimationParams] = useState({ stiffness: 87, damping: 26 })
-  const [updateSpeed, setUpdateSpeed] = useState(1000);
+  //const [animationParams, setAntimationParams] = useState({ stiffness: 87, damping: 26 })
+  const [updateSpeed] = useState(1000);
 
 
   useInterval(() => {
@@ -458,8 +459,9 @@ function App() {
   }, updateSpeed);
 
   return (
-    <div style={{ height: 600 }}>
-      {/* <ResponsiveLine
+    <div style={{ height: 600, position: 'relative' }}>
+      <div style={{height: 600, position: 'relative' }}>
+        {/* <ResponsiveLine
         data={dataset2}
         margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
         curve="monotoneX"
@@ -471,37 +473,69 @@ function App() {
         }}
         xFormat="time:%Y-%m-%d"
       /> */}
+      <ResponsiveBar
+          margin={{ top: 60, right: 80, bottom: 60, left: 20 }}
+          data={data.map(v => {
+            var key = v.x;
+            var obj = {};
+            obj[key] = v.y;
+            console.log({...obj, "id":v.x})
+            return {...obj, "id":v.x};
+          })}
+      
+          xScale={{
+            type: 'time',
+            format: '%Y-%m-%d',
+            precision: 'day',
+          }}
+          xFormat="time:%Y-%m-%d"
+          //axisBottom={{ format: d => d.toString() }}
+          keys={data.map( v => v.x)}
+          enableGridX={false}
+          enableGridY={false}
+          axisRight={{ tickSize: 5, tickPadding: 5, tickRotation: 0, legend: '', legendOffset: 0 }}
+          axisLeft ={null}
+          // axisBottom ={null}
+          axisBottom={ null }
+        />
 
-      <ResponsiveLine
-        margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
-        data={[{ id: "first", data: data }]}
-        xScale={{
-          type: 'time',
-          format: '%Y-%m-%d',
-          precision: 'day',
-        }}
-        xFormat="time:%Y-%m-%d"
+        
+      </div>
 
-        axisBottom={{
-          format: '%b %d',
-        }}
-        curve={'monotoneX'}
-        animate={true}
-        enablePointLabel={false}
-        pointSize={0}
-        // pointBorderWidth={1}
-        // pointBorderColor={{
-        //   from: 'color',
-        //   modifiers: [['darker', 0.3]],
-        // }}
-        useMesh={true}
-        enableSlices={false}
-        motionStiffness={300}
-        motionDamping={40}
-      />
+      <div style={{ height: 600, width:"100%", position: 'absolute', top: 0 }}>
 
-
+        
+        <ResponsiveLine
+          margin={{ top: 60, right: 80, bottom: 60, left: 40 }}
+          data={[{ id: "first", data: data }]}
+          xScale={{
+            type: 'time',
+            format: '%Y-%m-%d',
+            precision: 'day',
+          }}
+          xFormat="time:%Y-%m-%d"
+          colors={{ scheme: 'category10' }}
+          axisBottom={{
+            format: '%b %d',
+          }}
+          curve={'monotoneX'}
+          animate={true}
+          enablePointLabel={false}
+          pointSize={0}
+          // pointBorderWidth={1}
+          // pointBorderColor={{
+          //   from: 'color',
+          //   modifiers: [['darker', 0.3]],
+          // }}
+          useMesh={true}
+          enableSlices={false}
+          motionStiffness={200}
+          motionDamping={40}
+        />
+      </div>
     </div>
+
+
   );
 }
 
